@@ -9,6 +9,7 @@
 
 import { useState, useEffect } from 'react';
 import './DriverDashboard.css';
+import config from '../config';
 
 const DriverDashboard = () => {
   const [bookings, setBookings] = useState([]);
@@ -26,7 +27,7 @@ const DriverDashboard = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch(`http://localhost:5000/api/driver/bookings/${status}`);
+      const response = await fetch(`${config.API_URL}/api/driver/bookings/${status}`);
       const data = await response.json();
       
       if (data.success) {
@@ -53,7 +54,7 @@ const DriverDashboard = () => {
     setSuccess('');
     
     try {
-      const response = await fetch(`http://localhost:5000/api/driver/bookings/${bookingRef}/status`, {
+      const response = await fetch(`${config.API_URL}/api/driver/bookings/${bookingRef}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -13,6 +13,7 @@
 
 import { useState } from 'react';
 import './BookingForm.css';
+import config from '../config';
 
 const BookingForm = () => {
   const [formData, setFormData] = useState({
@@ -80,7 +81,7 @@ const BookingForm = () => {
 
     try {
       console.log('Sending request to backend...');
-      const response = await fetch('http://localhost:5000/api/bookings', {
+      const response = await fetch(`${config.API_URL}/api/bookings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

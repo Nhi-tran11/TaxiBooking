@@ -9,6 +9,7 @@
 
 import { useState } from 'react';
 import './CustomerTracker.css';
+import config from '../config';
 
 const CustomerTracker = () => {
   const [bookingRef, setBookingRef] = useState('');
@@ -29,7 +30,7 @@ const CustomerTracker = () => {
     setBooking(null);
 
     try {
-      const response = await fetch(`http://localhost:5000/api/tracker/${bookingRef.trim()}`);
+      const response = await fetch(`${config.API_URL}/api/tracker/${bookingRef.trim()}`);
       const data = await response.json();
 
       if (data.success) {

@@ -13,6 +13,7 @@
  */
 
 import { useState } from 'react';
+import config from '../config';
 import './AdminPage.css';
 
 const AdminPage = () => {
@@ -29,8 +30,8 @@ const AdminPage = () => {
 
     try {
       const url = searchRef 
-        ? `http://localhost:5000/api/bookings/search?bsearch=${encodeURIComponent(searchRef)}`
-        : 'http://localhost:5000/api/bookings/unassigned';
+        ? `${config.API_URL}/api/bookings/search?bsearch=${encodeURIComponent(searchRef)}`
+        : `${config.API_URL}/api/bookings/unassigned`;
 
       const response = await fetch(url);
       const data = await response.json();
@@ -57,7 +58,7 @@ const AdminPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/bookings/upcoming');
+      const response = await fetch(`${config.API_URL}/api/bookings/upcoming`);
       const data = await response.json();
 
       if (data.success) {
@@ -85,7 +86,7 @@ const AdminPage = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/bookings/assign', {
+      const response = await fetch(`${config.API_URL}/api/bookings/assign`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

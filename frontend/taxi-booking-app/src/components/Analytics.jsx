@@ -9,6 +9,7 @@
 
 import { useState, useEffect } from 'react';
 import './Analytics.css';
+import config from '../config';
 
 const Analytics = () => {
   const [stats, setStats] = useState(null);
@@ -27,9 +28,9 @@ const Analytics = () => {
 
     try {
       const [statsRes, routesRes, revenueRes] = await Promise.all([
-        fetch('http://localhost:5000/api/analytics/stats'),
-        fetch('http://localhost:5000/api/analytics/popular-routes'),
-        fetch('http://localhost:5000/api/analytics/revenue')
+        fetch(`${config.API_URL}/api/analytics/stats`),
+        fetch(`${config.API_URL}/api/analytics/popular-routes`),
+        fetch(`${config.API_URL}/api/analytics/revenue`)
       ]);
 
       const statsData = await statsRes.json();

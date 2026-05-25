@@ -9,6 +9,7 @@
 
 import { useState, useEffect } from 'react';
 import './FareCalculator.css';
+import config from '../config';
 
 const FareCalculator = () => {
   const [suburbs, setSuburbs] = useState([]);
@@ -28,7 +29,7 @@ const FareCalculator = () => {
 
   const fetchSuburbs = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/fare/suburbs');
+      const response = await fetch(`${config.API_URL}/api/fare/suburbs`);
       const data = await response.json();
       
       if (data.success) {
@@ -60,7 +61,7 @@ const FareCalculator = () => {
     setFareResult(null);
 
     try {
-      const response = await fetch('http://localhost:5000/api/fare/calculate', {
+      const response = await fetch(`${config.API_URL}/api/fare/calculate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
