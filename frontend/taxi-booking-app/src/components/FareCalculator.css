@@ -1,0 +1,246 @@
+/*
+ * Student Information:
+ * Name: Xuan Nhi thi Tran
+ * Student ID: 23196149
+ *
+ * File: FareCalculator.css
+ * Description: Styling for the fare calculator component
+ */
+
+.fare-calculator {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.fare-calculator h1 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.calculator-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .calculator-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.calculator-form {
+  background: #f9f9f9;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.calculator-form h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.calculator-form select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background: white;
+  box-sizing: border-box;
+}
+
+.info-box {
+  background: #e3f2fd;
+  border-left: 4px solid #2196F3;
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 4px;
+}
+
+.info-box h4 {
+  margin-top: 0;
+  color: #1976D2;
+}
+
+.info-box ul {
+  margin: 10px 0 0 0;
+  padding-left: 20px;
+}
+
+.info-box li {
+  margin: 5px 0;
+  color: #555;
+  font-size: 14px;
+}
+
+.fare-result {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+  animation: slideUp 0.5s;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.result-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 30px;
+  text-align: center;
+}
+
+.result-header h2 {
+  margin: 0 0 15px 0;
+  font-size: 20px;
+  font-weight: normal;
+  opacity: 0.9;
+}
+
+.total-fare {
+  font-size: 48px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.currency {
+  font-size: 24px;
+  opacity: 0.8;
+  margin-left: 5px;
+}
+
+.route-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 25px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+}
+
+.route-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.route-item .icon {
+  font-size: 24px;
+}
+
+.route-label {
+  color: #666;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.route-value {
+  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.route-arrow {
+  font-size: 24px;
+  color: #999;
+  padding: 0 15px;
+}
+
+.route-stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+  background: white;
+  border-bottom: 1px solid #eee;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-icon {
+  font-size: 28px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  color: #666;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.breakdown-section {
+  padding: 25px;
+}
+
+.breakdown-section h3 {
+  margin-top: 0;
+  color: #333;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #eee;
+}
+
+.breakdown-items {
+  margin-top: 15px;
+}
+
+.breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+  color: #555;
+}
+
+.breakdown-item:last-child {
+  border-bottom: none;
+}
+
+.breakdown-item.surcharge {
+  color: #FF5722;
+  font-weight: bold;
+}
+
+.disclaimer {
+  background: #FFF9C4;
+  padding: 15px;
+  margin: 20px 25px 25px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #666;
+  border-left: 4px solid #FFC107;
+}
+
+.disclaimer strong {
+  color: #F57C00;
+}

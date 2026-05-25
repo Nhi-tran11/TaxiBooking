@@ -1,0 +1,238 @@
+/*
+ * Student Information:
+ * Name: Xuan Nhi thi Tran
+ * Student ID: 23196149
+ *
+ * File: CustomerTracker.css
+ * Description: Styling for the customer tracker component
+ */
+
+.customer-tracker {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.customer-tracker h1 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.tracker-form {
+  background: #f9f9f9;
+  padding: 30px;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.search-group {
+  display: flex;
+  gap: 10px;
+}
+
+.search-group input {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.search-group input:focus {
+  outline: none;
+  border-color: #2196F3;
+}
+
+.tracking-result {
+  margin-top: 30px;
+  animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.status-header {
+  padding: 30px;
+  border-radius: 8px 8px 0 0;
+  color: white;
+  text-align: center;
+}
+
+.status-header h2 {
+  margin: 0 0 10px 0;
+  font-size: 28px;
+}
+
+.status-header p {
+  margin: 0;
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.booking-info {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 0 0 8px 8px;
+  padding: 30px;
+}
+
+.info-section {
+  margin-bottom: 30px;
+}
+
+.info-section h3 {
+  color: #333;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #eee;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.info-item .label {
+  color: #000;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.info-item .value {
+  color: #000;
+  font-size: 16px;
+}
+
+.countdown-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 25px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.countdown-section h3 {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+}
+
+.countdown {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.countdown-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.countdown-value {
+  font-size: 48px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.countdown-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  opacity: 0.8;
+  margin-top: 5px;
+}
+
+.countdown-divider {
+  font-size: 48px;
+  font-weight: bold;
+  margin: 0 10px;
+}
+
+.timeline-section h3 {
+  color: #333;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #eee;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 30px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #ddd;
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 30px;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -26px;
+  top: 5px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ddd;
+  border: 3px solid white;
+  box-shadow: 0 0 0 2px #ddd;
+}
+
+.timeline-item.completed .timeline-marker {
+  background: #4CAF50;
+  box-shadow: 0 0 0 2px #4CAF50;
+}
+
+.timeline-content h4 {
+  margin: 0 0 5px 0;
+  color: #333;
+  font-size: 16px;
+}
+
+.timeline-content p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.timeline-item.completed .timeline-content h4 {
+  color: #4CAF50;
+  font-weight: bold;
+}
+
+.refresh-btn {
+  width: 100%;
+  margin-top: 20px;
+  font-size: 16px;
+}

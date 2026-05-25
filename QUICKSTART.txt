@@ -1,0 +1,198 @@
+================================================================================
+QUICK START GUIDE - Taxi Booking System (React + .NET)
+================================================================================
+
+Student Information:
+Name: Xuan Nhi thi Tran
+Student ID: 23196149
+
+================================================================================
+PREREQUISITES
+================================================================================
+
+Before starting, ensure you have installed:
+1. .NET 8 SDK - https://dotnet.microsoft.com/download
+2. Node.js (v18+) - https://nodejs.org/
+3. MySQL database access
+
+Verify installations:
+  dotnet --version    # Should show 8.x.x
+  node --version      # Should show v18.x.x or higher
+  npm --version       # Should show 9.x.x or higher
+
+================================================================================
+STEP-BY-STEP SETUP
+================================================================================
+
+STEP 1: Backend Setup
+----------------------
+1. Open a terminal and navigate to the backend directory:
+   cd /Users/xuannhitran/Documents/Assign/backend/TaxiBookingApi
+
+2. Restore .NET dependencies:
+   dotnet restore
+
+3. Verify the database connection in appsettings.json
+   (already configured for webdev.aut.ac.nz)
+
+4. Run the backend API:
+   dotnet run
+
+5. You should see output indicating the API is running:
+   "Now listening on: http://localhost:5000"
+
+6. Test API is working by visiting:
+   http://localhost:5000/swagger
+   (You should see the Swagger API documentation)
+
+7. KEEP THIS TERMINAL WINDOW OPEN (API must stay running)
+
+STEP 2: Frontend Setup
+-----------------------
+1. Open a NEW terminal window
+
+2. Navigate to the frontend directory:
+   cd /Users/xuannhitran/Documents/Assign/frontend/taxi-booking-app
+
+3. Install Node dependencies (first time only):
+   npm install
+
+4. Start the React development server:
+   npm run dev
+
+5. You should see output with:
+   "Local: http://localhost:5173/"
+
+6. KEEP THIS TERMINAL WINDOW OPEN (React must stay running)
+
+STEP 3: Access the Application
+-------------------------------
+1. Open your web browser
+
+2. Navigate to:
+   http://localhost:5173
+
+3. You should see the Taxi Booking System homepage
+
+4. Test the booking functionality:
+   - Fill out the form
+   - Submit a booking
+   - Note the booking reference number
+
+5. Test the admin functionality:
+   - Click "Go to Admin Page"
+   - Search for your booking
+   - Try the "Show Upcoming (2hrs)" button
+   - Assign the booking
+
+================================================================================
+COMMON ISSUES & SOLUTIONS
+================================================================================
+
+Issue: Port 5000 already in use
+Solution: 
+  - Find and stop the process using port 5000
+  - On macOS/Linux: lsof -ti:5000 | xargs kill
+  - On Windows: netstat -ano | findstr :5000, then taskkill /PID <PID> /F
+
+Issue: Port 5173 already in use
+Solution:
+  - Stop any other Vite/React dev servers
+  - Or change the port in vite.config.js
+
+Issue: CORS errors in browser console
+Solution:
+  - Ensure backend is running on http://localhost:5000
+  - Ensure frontend is running on http://localhost:5173
+  - Check Program.cs has correct CORS policy
+
+Issue: Database connection failed
+Solution:
+  - Verify credentials in appsettings.json
+  - Ensure you have network access to webdev.aut.ac.nz
+  - Check MySQL server is running
+
+Issue: "dotnet: command not found"
+Solution:
+  - Install .NET 8 SDK from https://dotnet.microsoft.com/download
+  - Restart your terminal after installation
+
+Issue: "npm: command not found"
+Solution:
+  - Install Node.js from https://nodejs.org/
+  - Restart your terminal after installation
+
+================================================================================
+STOPPING THE APPLICATION
+================================================================================
+
+To stop the servers:
+1. In the backend terminal: Press Ctrl+C
+2. In the frontend terminal: Press Ctrl+C
+
+You can restart anytime by following Step 1 and Step 2 again.
+
+================================================================================
+TESTING CHECKLIST
+================================================================================
+
+Customer Booking:
+□ Navigate to http://localhost:5173
+□ Fill in all required fields
+□ Try invalid data (e.g., past date)
+□ Submit valid booking
+□ Verify booking reference is displayed
+□ Note the reference number for admin testing
+
+Admin Functions:
+□ Click "Go to Admin Page"
+□ Search for booking by reference
+□ Verify booking details are correct
+□ Leave search empty and click "Search" to see all unassigned
+□ Click "Show Upcoming (2hrs)" button
+□ Click "Assign" button on a booking
+□ Verify status changes to "assigned"
+□ Try to assign the same booking again (should fail)
+
+API Testing (Optional):
+□ Visit http://localhost:5000/swagger
+□ Try each endpoint in Swagger UI
+□ POST /api/bookings - Create a booking
+□ GET /api/bookings/search - Search by reference
+□ GET /api/bookings/unassigned - List unassigned
+□ GET /api/bookings/upcoming - List upcoming (2hrs)
+□ POST /api/bookings/assign - Assign a booking
+
+================================================================================
+DEVELOPMENT MODE FEATURES
+================================================================================
+
+Backend (dotnet run):
+- Hot reload enabled (changes reload automatically)
+- Detailed error messages in terminal
+- Swagger documentation at /swagger endpoint
+
+Frontend (npm run dev):
+- Hot Module Replacement (HMR) - instant updates
+- React Developer Tools compatible
+- Source maps for debugging
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+For Production Deployment:
+1. Build the React frontend:
+   cd frontend/taxi-booking-app && npm run build
+
+2. Publish the .NET API:
+   cd backend/TaxiBookingApi && dotnet publish -c Release
+
+3. Deploy to your hosting service (e.g., Azure, AWS, AUT webdev)
+
+For More Information:
+- See readme.txt for complete documentation
+- Check code comments in source files
+- Review Swagger documentation at http://localhost:5000/swagger
+
+================================================================================

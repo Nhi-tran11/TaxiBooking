@@ -1,0 +1,747 @@
+TAXI BOOKING SYSTEM - DOCUMENTATION
+=====================================
+
+Student Information:
+Name: Xuan Nhi thi Tran
+Student ID: 23196149
+Date: 23 May 2026
+
+=====================================
+
+1. PUBLIC URL OF THE DEPLOYED APPLICATION
+------------------------------------------
+Local Development URLs:
+- Frontend: http://localhost:5173 (or http://localhost:5174 if port 5173 is in use)
+- Backend API: http://localhost:5000
+
+Note: This application is currently configured for local development only. For production deployment to StackBlitz or other platforms, the SQLite database has been configured to enable easy deployment without external database dependencies.
+
+
+2. TECHNOLOGY STACK USED
+-------------------------
+
+FRONTEND:
+- React: v19.2.6
+- React Router DOM: v7.15.1
+- Vite: v8.0.12 (Build tool and dev server)
+- React DOM: v19.2.6
+- ESLint: v10.3.0 (Code linting)
+
+BACKEND:
+- Node.js with Express.js: v4.18.2
+- Better-SQLite3: v12.10.0 (Synchronous SQLite database)
+- CORS: v2.8.5 (Cross-Origin Resource Sharing)
+- Dotenv: v16.3.1 (Environment variables)
+
+DATABASE:
+- SQLite (File-based database: backend/nodejs-api/data/bookings.db)
+
+MAP PROVIDER:
+- No external map provider integrated
+- Suburbs are predefined with distances from Auckland CBD
+- 19 Auckland suburbs included in the fare calculation system
+
+
+3. HOW TO RUN AND BUILD THE PROJECT LOCALLY
+--------------------------------------------
+
+PREREQUISITES:
+- Node.js (v14 or higher)
+- npm (comes with Node.js)
+
+INSTALLATION STEPS:
+
+Step 1: Install Backend Dependencies
+-------------------------------------
+cd backend/nodejs-api
+npm install
+
+Step 2: Install Frontend Dependencies
+--------------------------------------
+cd frontend/taxi-booking-app
+npm install
+
+Step 3: Start the Backend Server
+---------------------------------
+cd backend/nodejs-api
+npm start
+
+Expected output: 
+"Database initialized successfully"
+"Server is running on port 5000"
+
+Step 4: Start the Frontend Development Server
+----------------------------------------------
+cd frontend/taxi-booking-app
+npm run dev
+
+Expected output:
+"VITE v8.0.13  ready in XXX ms"
+"Local:   http://localhost:5173/"
+
+Step 5: Access the Application
+-------------------------------
+Open your web browser and navigate to: http://localhost:5173
+
+BUILD FOR PRODUCTION:
+
+Frontend Build:
+---------------
+cd frontend/taxi-booking-app
+npm run build
+
+This creates optimized production files in the dist/ folder.
+
+To preview the production build:
+npm run preview
+
+
+4. MICROSERVICE API ENDPOINTS USED
+-----------------------------------
+
+BASE URL: http://localhost:5000/api
+
+BOOKING ENDPOINTS:
+------------------
+POST   /bookings
+       - Create a new booking
+       - Body: { customer_name, phone_number, unit_number, street_number, 
+                suburb, destination, pickup_date, pickup_time }
+       - Returns: { success, bookingRef, message }
+
+GET    /bookings/search?bsearch={BRN}
+       - Search for a booking by reference number
+       - Returns: { success, booking }
+
+GET    /bookings/unassigned
+       - Get all unassigned bookings
+       - Returns: { success, bookings }
+
+GET    /bookings/upcoming
+       - Get bookings with pickup time within next 2 hours
+       - Returns: { success, bookings }
+
+POST   /bookings/assign
+       - Assign a booking to a driver
+       - Body: { bookingRef, driver_name }
+       - Returns: { success, message }
+
+DRIVER ENDPOINTS:
+-----------------
+GET    /driver/bookings/:status
+       - Get bookings by status (assigned, picked-up, en-route, completed)
+       - Returns: { success, bookings }
+
+PUT    /driver/bookings/:bookingRef/status
+       - Update booking status
+       - Body: { status, driver_name }
+       - Returns: { success, message }
+
+TRACKER ENDPOINTS:
+------------------
+GET    /tracker/:bookingRef
+       - Get detailed tracking information for a booking
+       - Returns: { success, booking, statusInfo, timeline, timeUntilPickup }
+
+FARE CALCULATOR ENDPOINTS:
+--------------------------
+GET    /fare/suburbs
+       - Get list of available suburbs with distances and zones
+       - Returns: { success, suburbs }
+
+POST   /fare/calculate
+       - Calculate fare for a route
+       - Body: { pickup, destination, pickupTime }
+       - Returns: { success, fare, breakdown }
+
+ANALYTICS ENDPOINTS:
+--------------------
+GET    /analytics/stats
+       - Get overall statistics
+       - Returns: { success, stats }
+
+GET    /analytics/popular-routes
+       - Get top pickup locations and destinations
+       - Returns: { success, routes }
+
+GET    /analytics/revenue
+       - Get revenue data by day and status
+       - Returns: { success, revenue }
+
+
+5. FEATURE DESCRIPTIONS
+------------------------
+
+FEATURE 1: CUSTOMER BOOKING SYSTEM (/)
+---------------------------------------
+- Main booking form for customers to book taxi rides
+- Fields: Customer name, phone, address (unit, street, suburb), 
+  destination, pickup date, pickup time
+- Validation: Prevents booking pickup times in the past
+- Alert notifications for validation errors
+- Generates unique booking reference numbers (BRN format)
+- Displays confirmation with booking reference
+- Navigation to Track Booking, Fare Calculator, Driver Dashboard, Admin
+
+FEATURE 2: ADMIN PAGE (/admin)
+-------------------------------
+- Search bookings by reference number (BRN format)
+- View all unassigned bookings
+- View upcoming bookings (within 2 hours)
+- Assign bookings to drivers
+- Display booking details in table format
+- Navigation to Analytics Dashboard
+
+FEATURE 3: DRIVER DASHBOARD (/driver)
+--------------------------------------
+- Filter bookings by status: Assigned, Picked Up, En Route, Completed, All
+- View booking cards with customer details
+- Update booking status with progression workflow:
+  * Assigned → Picked Up → En Route → Completed
+- Assign driver name to bookings
+- Status badges with color coding
+- Real-time status updates
+- Success messages on status changes
+
+FEATURE 4: CUSTOMER TRACKER (/tracker)
+---------------------------------------
+- Search bookings by reference number
+- Real-time status display with color-coded headers
+- Countdown timer showing time until pickup (hours and minutes)
+- Timeline visualization with 4 stages:
+  * Booked (when booking was created)
+  * Assigned (when driver assigned)
+  * Picked Up (when driver picked up customer)
+  * Completed (when ride finished)
+- Display detailed booking information
+- Auto-refresh capability
+- Status-specific messages and colors
+
+FEATURE 5: FARE CALCULATOR (/fare)
+-----------------------------------
+- Calculate estimated fares between Auckland suburbs
+- 19 predefined suburbs with distances from CBD
+- Pricing structure:
+  * Base fare: $5.00
+  * Distance charge: $2.50 per km
+  * Zone multipliers: Inner (1.0x), Mid (1.1x), Outer (1.2x)
+  * Peak hour surcharge: +50% (weekdays 7-9am, 5-7pm)
+  * Night surcharge: +30% (10pm-6am)
+- Display detailed breakdown:
+  * Base fare
+  * Distance charge
+  * Zone multiplier
+  * Time multiplier
+  * Total fare
+- Show route information with distance and estimated time
+- Pricing information disclaimer
+
+FEATURE 6: ANALYTICS DASHBOARD (/analytics)
+--------------------------------------------
+- 6 Key Metric Cards:
+  * Total Bookings
+  * Completed Bookings
+  * Today's Bookings
+  * Total Revenue
+  * Average Fare
+  * Completion Rate
+- Bookings by Status:
+  * Visual bar chart with status distribution
+  * Color-coded bars for each status
+- Top 5 Pickup Locations and Destinations:
+  * Ranking with booking counts
+- Daily Revenue Chart:
+  * Bar chart for last 7 days
+  * Shows revenue and booking count per day
+- Revenue by Status Table:
+  * Breakdown of revenue by booking status
+- Refresh capability to reload all data
+
+
+6. TESTING INSTRUCTIONS
+------------------------
+
+EXAMPLE BOOKING REFERENCES:
+---------------------------
+The system generates booking references in format: BRNxxxxx (BRN followed by 5 digits)
+
+Example references to test with:
+- BRN00001 (First booking)
+- BRN00002 (Second booking)
+- BRN00003 (Third booking)
+
+Note: Actual booking references depend on bookings created in your database.
+
+SAMPLE DRIVER IDS/NAMES:
+------------------------
+Driver names are free-form text input. Use any driver name for testing:
+- John Smith
+- Sarah Johnson
+- Mike Chen
+- Emma Wilson
+- David Brown
+
+TEST SCENARIOS:
+---------------
+
+Test 1: Create a Booking
+-------------------------
+1. Navigate to http://localhost:5173
+2. Fill in all booking form fields:
+   - Customer Name: Test User
+   - Phone Number: 0210123456
+   - Unit Number: Apt 5
+   - Street Number: 123 Queen Street
+   - Suburb: Auckland
+   - Destination: Airport
+   - Pickup Date: Select tomorrow's date
+   - Pickup Time: 14:00
+3. Click "Book Now"
+4. Verify success message and booking reference displayed
+5. Note the booking reference number (e.g., BRN00001)
+
+Test 2: Track a Booking
+------------------------
+1. From confirmation page, click "Track My Booking"
+2. Enter the booking reference from Test 1
+3. Click "Track Booking"
+4. Verify booking details are displayed
+5. Check timeline shows "Booked" stage completed
+6. Verify countdown timer is displayed
+
+Test 3: Admin - Assign a Driver
+--------------------------------
+1. Navigate to /admin
+2. Search for the booking reference from Test 1
+3. In the Driver Name field, enter: "John Smith"
+4. Click "Assign"
+5. Verify success message
+6. Refresh the page and verify status shows "assigned"
+
+Test 4: Driver Dashboard
+-------------------------
+1. Navigate to /driver
+2. Verify "Assigned" filter is active by default
+3. Locate the booking assigned in Test 3
+4. Click "Update Status" to change to "Picked Up"
+5. Verify status changes and booking moves to "Picked Up" filter
+6. Continue updating status through: En Route → Completed
+
+Test 5: Customer Tracker - Updated Status
+------------------------------------------
+1. Navigate to /tracker
+2. Enter the booking reference from Test 1
+3. Verify status has updated to current status from Test 4
+4. Check timeline shows completed stages
+5. Click "Refresh Status" to see real-time updates
+
+Test 6: Fare Calculator
+------------------------
+1. Navigate to /fare
+2. Select Pickup: Auckland CBD
+3. Select Destination: Airport
+4. Select Time: 08:00 (peak hour)
+5. Click "Calculate Fare"
+6. Verify fare breakdown shows:
+   - Base fare: $5.00
+   - Distance: 21km × $2.50 = $52.50
+   - Zone multiplier: 3 (Outer zone) = 1.2x
+   - Peak hour: +50%
+   - Total fare calculated correctly
+
+Test 7: Analytics Dashboard
+----------------------------
+1. Navigate to /analytics
+2. Verify metric cards show correct counts
+3. Check "Bookings by Status" displays bars
+4. Verify Top Pickup Locations and Destinations are listed
+5. Check Daily Revenue Chart displays data
+6. Review Revenue by Status table
+7. Click "Refresh Data" to reload
+
+Test 8: Validation - Past Time Booking
+---------------------------------------
+1. Navigate to /
+2. Fill booking form with pickup date: Today
+3. Select pickup time in the past (e.g., 1 hour ago)
+4. Click "Book Now"
+5. Verify alert popup appears with error message
+6. Verify error message displayed below form
+7. Confirm booking is NOT created
+
+Test 9: Search Non-existent Booking
+------------------------------------
+1. Navigate to /admin
+2. Search for booking reference: BRN99999
+3. Verify "No bookings found" error message
+4. Try tracker with same reference
+5. Verify error message displayed
+
+Test 10: Show Upcoming Bookings
+--------------------------------
+1. Create a booking with pickup time 1 hour from now
+2. Navigate to /admin
+3. Click "Show Upcoming (2hrs)" button
+4. Verify the booking appears in results
+5. Create another booking for tomorrow
+6. Click "Show Upcoming" again
+7. Verify tomorrow's booking does NOT appear
+
+
+7. LIMITATIONS AND KNOWN ISSUES
+--------------------------------
+
+KNOWN LIMITATIONS:
+------------------
+
+1. No Real-Time Updates
+   - Status changes don't automatically update in other browser windows
+   - Users must manually refresh to see latest status
+   - No WebSocket or polling implementation
+
+2. No Authentication/Authorization
+   - No login system for drivers or admins
+   - Anyone can access all pages
+   - No role-based access control
+
+3. No Map Integration
+   - No visual map display for routes
+   - No real-time driver tracking on map
+   - Suburbs are predefined without geocoding
+
+4. Limited Driver Management
+   - No driver registration system
+   - Driver names are free-form text input
+   - No driver profile or availability management
+
+5. No Payment Processing
+   - Fares are calculated but not collected
+   - No integration with payment gateways
+   - No invoice generation
+
+6. Database Limitations
+   - SQLite is single-file, not suitable for high concurrency
+   - No database backups automated
+   - Limited to local storage
+
+7. No Email/SMS Notifications
+   - No booking confirmation emails
+   - No driver assignment notifications
+   - No status update alerts to customers
+
+8. Time Zone Handling
+   - All times are treated as local time
+   - No timezone conversion for international bookings
+
+9. Search Functionality
+   - Admin search only works with exact booking reference
+   - No fuzzy search or customer name search
+   - Cannot search by phone number or address
+
+10. Fare Calculator Accuracy
+    - Distances are approximations
+    - No real-time traffic consideration
+    - No route optimization
+
+KNOWN ISSUES:
+-------------
+
+1. Port Conflicts
+   - Backend may fail to start if port 5000 is already in use
+   - Solution: Kill existing process with: lsof -ti:5000 | xargs kill -9
+   - Frontend may use port 5174 if 5173 is occupied
+
+2. Date Picker Browser Compatibility
+   - Date/time input appearance varies by browser
+   - Some browsers may not support min date attribute
+
+3. Large Dataset Performance
+   - Analytics page may be slow with thousands of bookings
+   - No pagination on booking lists
+   - Revenue chart limited to last 7 days only
+
+4. Validation Edge Cases
+   - Booking reference format strictly enforced (BRNxxxxx)
+   - Phone number accepts any format (no international validation)
+   - Destination field is optional (allows null values)
+
+5. CSS Color Visibility
+   - Status bars in analytics may have contrast issues
+   - Text color changed to black for better visibility
+   - White text removed to improve readability
+
+6. No Data Persistence Warning
+   - SQLite database can be deleted accidentally
+   - No warning before status updates
+   - No undo functionality
+
+7. Concurrent Booking Issues
+   - No locking mechanism for booking assignments
+   - Multiple admins could assign same booking to different drivers
+   - No conflict resolution
+
+8. Browser Refresh Loses State
+   - Driver dashboard filters reset on refresh
+   - Form data not preserved on navigation
+   - No session storage implementation
+
+RECOMMENDED IMPROVEMENTS:
+-------------------------
+
+1. Implement WebSocket for real-time updates
+2. Add user authentication and authorization
+3. Integrate Google Maps API for visual route display
+4. Add email/SMS notification system
+5. Implement payment gateway integration
+6. Add pagination for large datasets
+7. Create driver registration and management system
+8. Add booking history and reporting features
+9. Implement data backup and recovery
+10. Add internationalization support
+11. Create mobile-responsive design improvements
+12. Add unit and integration tests
+
+
+8. REFLECTION ON AI-SUPPORTED DEVELOPMENT PROCESS
+--------------------------------------------------
+
+OVERVIEW:
+---------
+This project was developed with the assistance of GitHub Copilot AI, which served as an intelligent coding assistant throughout the development lifecycle. This section reflects on how AI tools impacted the development process, productivity, code quality, and learning experience.
+
+AI TOOLS USED:
+--------------
+- GitHub Copilot (Claude Sonnet 4.5 model)
+- AI-assisted code generation and completion
+- AI-powered debugging and problem-solving
+- AI-guided architectural decisions
+
+POSITIVE IMPACTS:
+-----------------
+
+1. Rapid Prototyping and Development Speed
+   - AI generated complete component structures quickly
+   - Boilerplate code created in seconds rather than minutes
+   - Full CRUD API endpoints scaffolded rapidly
+   - Reduced development time by approximately 60-70%
+
+2. Code Quality and Best Practices
+   - AI suggested modern React patterns (functional components, hooks)
+   - Consistent code style across all files
+   - Proper error handling implemented automatically
+   - Comments and documentation generated alongside code
+
+3. Problem-Solving and Debugging
+   - AI identified MySQL connection timeout issues quickly
+   - Suggested migration from MySQL to SQLite for easier deployment
+   - Debugged port conflict issues (EADDRINUSE errors)
+   - Provided solutions for validation and user feedback problems
+
+4. Learning and Skill Development
+   - Learned SQLite synchronous API through AI explanations
+   - Understood React Router v7 implementation patterns
+   - Gained insights into Express.js middleware configuration
+   - Learned better-sqlite3 library usage and migration techniques
+
+5. Feature Expansion Efficiency
+   - Rapidly implemented 4 new features (Driver Dashboard, Customer Tracker, 
+     Fare Calculator, Analytics) in a single session
+   - Consistent component architecture across all features
+   - Parallel creation of frontend components and backend routes
+   - Complete styling with CSS for all components
+
+6. Database Schema Evolution
+   - AI assisted in adding new columns to existing SQLite database
+   - Generated proper ALTER TABLE migration scripts
+   - Ensured backward compatibility with existing data
+   - Implemented proper timestamp tracking (booking_datetime, assigned_datetime, etc.)
+
+CHALLENGES AND LIMITATIONS:
+---------------------------
+
+1. Context Understanding
+   - AI sometimes needed clarification on existing code structure
+   - Required multiple iterations to understand project-specific requirements
+   - Occasionally suggested solutions that didn't fit the architectural pattern
+
+2. Over-Engineering Risk
+   - AI sometimes suggested more complex solutions than needed
+   - Had to guide AI toward simpler, more maintainable approaches
+   - Required developer judgment to choose appropriate complexity level
+
+3. Validation and Testing Required
+   - AI-generated code still required manual testing
+   - Some edge cases not initially considered by AI
+   - Developer still needed to validate business logic correctness
+
+4. Dependency on Clear Instructions
+   - AI performed best with specific, detailed requests
+   - Vague requests led to generic or incorrect solutions
+   - Required iterative refinement of prompts for optimal results
+
+5. File Corruption Incident
+   - One instance where AI edit created duplicate form fields
+   - Required manual file deletion and recreation
+   - Highlighted importance of version control and backups
+
+SPECIFIC EXAMPLES OF AI ASSISTANCE:
+-----------------------------------
+
+Example 1: Database Migration
+   Problem: MySQL connection timeouts to webdev.aut.ac.nz
+   AI Solution: Suggested complete migration to SQLite
+   Steps: Uninstall mysql2 → Install better-sqlite3 → Convert async/await 
+          to synchronous API → Update all route files
+   Result: Successful migration in under 30 minutes
+
+Example 2: Validation Feedback
+   Problem: Book button failed silently when booking past times
+   AI Solution: Added alert() popups and enhanced error message styling
+   Implementation: Added validation in handleSubmit, created shake animation,
+                  improved CSS for error visibility
+   Result: Clear user feedback for all validation errors
+
+Example 3: Feature Expansion
+   Problem: User requested 4 new features for system expansion
+   AI Solution: Created comprehensive plan with backend routes first, 
+               then frontend components
+   Implementation: 5 backend route files + 4 frontend components with CSS
+   Result: All features implemented and tested in single session
+
+Example 4: Analytics Dashboard
+   Problem: Need admin dashboard with metrics and visualizations
+   AI Solution: Created comprehensive analytics with 6 metrics, status bars,
+               rankings, revenue charts, and tables
+   Implementation: Parallel data fetching from 3 endpoints, responsive grid
+                  layouts, color-coded visualizations
+   Result: Fully functional analytics dashboard with refresh capability
+
+DEVELOPMENT WORKFLOW WITH AI:
+------------------------------
+
+1. Planning Phase
+   - Discussed features and requirements with AI
+   - AI suggested technology stack and architecture
+   - Created todo lists to track progress
+   - Broke down complex features into manageable tasks
+
+2. Implementation Phase
+   - AI generated initial code structure
+   - Developer reviewed and refined implementations
+   - Iterative improvements based on testing
+   - AI fixed bugs and issues as they arose
+
+3. Testing Phase
+   - AI suggested test scenarios and edge cases
+   - Developer executed tests manually
+   - AI debugged failures and provided fixes
+   - Comprehensive documentation created
+
+4. Refinement Phase
+   - UI/UX improvements suggested by AI
+   - Color and styling adjustments for visibility
+   - Navigation enhancements across pages
+   - Final polishing and documentation
+
+LESSONS LEARNED:
+----------------
+
+1. AI as a Pair Programmer
+   - Most effective when treated as collaborative partner
+   - Works best with clear communication and specific requests
+   - Requires human oversight and judgment
+   - Accelerates development but doesn't replace developer expertise
+
+2. Importance of Incremental Development
+   - Breaking features into small tasks worked better with AI
+   - Incremental testing caught issues early
+   - Easier to debug when changes were small and focused
+
+3. Documentation Benefits
+   - AI-generated comments and documentation were valuable
+   - Student information headers consistently added to all files
+   - Comprehensive README created efficiently
+   - Code self-documenting through clear naming and structure
+
+4. Architecture Matters
+   - Starting with solid architecture paid dividends
+   - AI followed established patterns consistently
+   - Clean separation of concerns (routes, components, styling)
+   - Modular structure made expansion easier
+
+5. Version Control Essential
+   - File corruption incident highlighted need for backups
+   - Git commits after each feature completion recommended
+   - Ability to revert changes important safety net
+
+PRODUCTIVITY METRICS:
+---------------------
+
+Estimated Time Saved:
+- Backend API (5 routes): Saved ~4 hours (completed in 1 hour vs 5 hours)
+- Frontend Components (6 pages): Saved ~8 hours (completed in 2 hours vs 10 hours)
+- Styling (6 CSS files): Saved ~3 hours (completed in 30 mins vs 3.5 hours)
+- Debugging/Fixes: Saved ~2 hours (quick AI diagnosis vs manual debugging)
+- Documentation: Saved ~1 hour (AI-generated comprehensive README)
+
+Total Estimated Time Saved: ~18 hours
+Actual Development Time: ~5 hours
+Without AI Estimate: ~23 hours
+Efficiency Gain: ~78%
+
+RECOMMENDATIONS FOR FUTURE AI-ASSISTED DEVELOPMENT:
+---------------------------------------------------
+
+1. Start with Clear Requirements
+   - Define features and scope before coding
+   - Create wireframes or mockups when possible
+   - Establish coding standards and patterns upfront
+
+2. Use AI for Repetitive Tasks
+   - Boilerplate code generation
+   - CRUD operations
+   - Styling and CSS
+   - Documentation and comments
+
+3. Maintain Human Oversight
+   - Review all AI-generated code
+   - Test thoroughly before accepting
+   - Ensure alignment with requirements
+   - Validate business logic
+
+4. Leverage AI for Learning
+   - Ask AI to explain unfamiliar concepts
+   - Request alternative approaches
+   - Learn best practices through AI suggestions
+   - Build understanding, not just copy code
+
+5. Version Control Everything
+   - Commit frequently during AI-assisted development
+   - Use meaningful commit messages
+   - Create branches for experimental AI suggestions
+   - Maintain ability to rollback changes
+
+6. Balance Speed with Quality
+   - Don't sacrifice code quality for speed
+   - Refactor AI-generated code when needed
+   - Maintain consistent architecture
+   - Prioritize maintainability
+
+CONCLUSION:
+-----------
+AI-assisted development with GitHub Copilot significantly accelerated the development of this taxi booking system. The productivity gains were substantial (~78% time savings), while maintaining good code quality and learning opportunities. The AI acted as an effective pair programmer, handling repetitive tasks, suggesting solutions, and maintaining consistency across the codebase.
+
+However, human expertise remained essential for:
+- Architectural decisions and design patterns
+- Business logic validation
+- User experience considerations
+- Testing and quality assurance
+- Project management and prioritization
+
+The combination of AI efficiency and human judgment proved to be a powerful development approach. Future projects would benefit from this hybrid model, using AI to accelerate development while maintaining developer control over critical decisions and overall code quality.
+
+This experience demonstrates that AI tools are valuable augmentation for developers, enhancing productivity and learning, rather than replacement for developer skills and expertise. The key to success is knowing when to leverage AI assistance and when to apply human judgment and creativity.
+
+=====================================
+END OF DOCUMENTATION
+=====================================
