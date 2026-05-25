@@ -8,10 +8,12 @@
  */
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './CustomerTracker.css';
 import config from '../config';
 
 const CustomerTracker = () => {
+  const navigate = useNavigate();
   const [bookingRef, setBookingRef] = useState('');
   const [booking, setBooking] = useState(null);
   const [error, setError] = useState('');
@@ -57,7 +59,7 @@ const CustomerTracker = () => {
       <h1>Track Your Booking</h1>
       
       <div className="navigation-buttons">
-        <button onClick={() => window.location.href = '/'} className="btn-secondary">
+        <button onClick={() => navigate('/')} className="btn-secondary">
           Back to Home
         </button>
       </div>

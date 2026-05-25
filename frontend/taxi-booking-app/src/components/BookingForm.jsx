@@ -12,10 +12,12 @@
  */
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './BookingForm.css';
 import config from '../config';
 
 const BookingForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     cname: '',
     phone: '',
@@ -141,8 +143,8 @@ const BookingForm = () => {
         </div>
         <div className="confirmation-buttons">
           <button onClick={handleNewBooking} className="btn-primary">Make Another Booking</button>
-          <button onClick={() => window.location.href = '/tracker'} className="btn-info">📍 Track My Booking</button>
-          <button onClick={() => window.location.href = '/admin'} className="btn-secondary">Go to Admin Page</button>
+          <button onClick={() => navigate('/tracker')} className="btn-info">📍 Track My Booking</button>
+          <button onClick={() => navigate('/admin')} className="btn-secondary">Go to Admin Page</button>
         </div>
       </div>
     );
@@ -152,10 +154,10 @@ const BookingForm = () => {
     <div className="booking-container">
       <h1>Welcome to the Taxi Booking System</h1>
       <div className="navigation-buttons">
-        <button onClick={() => window.location.href = '/tracker'} className="btn-info">📍 Track Booking</button>
-        <button onClick={() => window.location.href = '/fare'} className="btn-info">💰 Fare Calculator</button>
-        <button onClick={() => window.location.href = '/driver'} className="btn-info">🚗 Driver Dashboard</button>
-        <button onClick={() => window.location.href = '/admin'} className="btn-secondary">Admin Page</button>
+        <button onClick={() => navigate('/tracker')} className="btn-info">📍 Track Booking</button>
+        <button onClick={() => navigate('/fare')} className="btn-info">💰 Fare Calculator</button>
+        <button onClick={() => navigate('/driver')} className="btn-info">🚗 Driver Dashboard</button>
+        <button onClick={() => navigate('/admin')} className="btn-secondary">Admin Page</button>
       </div>
       
       <h2>Booking Page</h2>

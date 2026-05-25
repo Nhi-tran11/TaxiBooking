@@ -8,10 +8,12 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './DriverDashboard.css';
 import config from '../config';
 
 const DriverDashboard = () => {
+  const navigate = useNavigate();
   const [bookings, setBookings] = useState([]);
   const [filterStatus, setFilterStatus] = useState('assigned');
   const [driverName, setDriverName] = useState('');
@@ -117,7 +119,7 @@ const DriverDashboard = () => {
       <h1>Driver Dashboard</h1>
       
       <div className="navigation-buttons">
-        <button onClick={() => window.location.href = '/'} className="btn-secondary">
+        <button onClick={() => navigate('/')} className="btn-secondary">
           Back to Home
         </button>
       </div>

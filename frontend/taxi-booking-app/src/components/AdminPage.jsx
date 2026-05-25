@@ -13,10 +13,12 @@
  */
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import config from '../config';
 import './AdminPage.css';
 
 const AdminPage = () => {
+  const navigate = useNavigate();
   const [searchRef, setSearchRef] = useState('');
   const [bookings, setBookings] = useState([]);
   const [error, setError] = useState('');
@@ -114,8 +116,8 @@ const AdminPage = () => {
       <h1>Taxi Booking Admin Page</h1>
       
       <div className="navigation-buttons">
-        <button onClick={() => window.location.href = '/'} className="btn-secondary">Go to Booking Page</button>
-        <button onClick={() => window.location.href = '/analytics'} className="btn-primary">📊 Analytics Dashboard</button>
+        <button onClick={() => navigate('/')} className="btn-secondary">Go to Booking Page</button>
+        <button onClick={() => navigate('/analytics')} className="btn-primary">📊 Analytics Dashboard</button>
       </div>
 
       <div className="search-section">

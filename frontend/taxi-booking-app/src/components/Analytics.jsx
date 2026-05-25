@@ -8,10 +8,12 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Analytics.css';
 import config from '../config';
 
 const Analytics = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [routes, setRoutes] = useState(null);
   const [revenue, setRevenue] = useState(null);
@@ -72,7 +74,7 @@ const Analytics = () => {
       <h1>📊 Analytics Dashboard</h1>
       
       <div className="navigation-buttons">
-        <button onClick={() => window.location.href = '/admin'} className="btn-secondary">
+        <button onClick={() => navigate('/admin')} className="btn-secondary">
           Back to Admin
         </button>
         <button onClick={fetchAnalytics} className="btn-primary">
