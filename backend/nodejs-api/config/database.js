@@ -11,14 +11,27 @@ const Database = require('better-sqlite3');
 const path = require('path');
 const fs = require('fs');
 
-// Ensure data directory exists
-const dataDir = path.join(__dirname, '..', 'data');
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
+// Ensure data directory exists with absolute path
+const dataDir = path.resolve(__dirname, '..', 'data');
+
+// Create directory if it doesn't exist
+try {
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+    console.log('Created data directory:', dataDir);
+  }
+} catch (error) {
+  console.error('Error creating data directory:', error);
+  // Fallback to current working directory
+  const fallbackDir = path.join(process.cwd(), 'data');
+  if (!fs.existsSync(fallbackDir)) {
+    fs.mkdirSync(fallbackDir, { recursive: true });
+  }
 }
 
 // Create or connect to SQLite database
 const dbPath = path.join(dataDir, 'bookings.db');
+console.log('Database path:', dbPath);
 const db = new Database(dbPath);
 
 // Enable foreign keys
