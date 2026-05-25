@@ -32,6 +32,23 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Taxi Booking API',
+    version: '1.0.0',
+    status: 'running',
+    endpoints: {
+      bookings: '/api/bookings',
+      driver: '/api/driver',
+      tracker: '/api/tracker',
+      fare: '/api/fare',
+      analytics: '/api/analytics',
+      health: '/health'
+    }
+  });
+});
+
 // Routes
 app.use('/api/bookings', bookingsRouter);
 app.use('/api/driver', driverRouter);
