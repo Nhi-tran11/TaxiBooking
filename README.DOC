@@ -10,11 +10,7 @@ Date: 23 May 2026
 
 1. PUBLIC URL OF THE DEPLOYED APPLICATION
 ------------------------------------------
-Local Development URLs:
-- Frontend: http://localhost:5173 (or http://localhost:5174 if port 5173 is in use)
-- Backend API: http://localhost:5000
-
-Note: This application is currently configured for local development only. For production deployment to StackBlitz or other platforms, the SQLite database has been configured to enable easy deployment without external database dependencies.
+Local Development URLs: https://taxibooking-app.onrender.com/
 
 
 2. TECHNOLOGY STACK USED
@@ -75,9 +71,6 @@ Step 4: Start the Frontend Development Server
 cd frontend/taxi-booking-app
 npm run dev
 
-Expected output:
-"VITE v8.0.13  ready in XXX ms"
-"Local:   http://localhost:5173/"
 
 Step 5: Access the Application
 -------------------------------
@@ -141,7 +134,8 @@ TRACKER ENDPOINTS:
 ------------------
 GET    /tracker/:bookingRef
        - Get detailed tracking information for a booking
-       - Returns: { success, booking, statusInfo, timeline, timeUntilPickup }
+       - Returns: { success, booking }
+       - booking object includes: statusDisplay, statusColor, statusMessage, timeline, timeUntilPickup
 
 FARE CALCULATOR ENDPOINTS:
 --------------------------
@@ -151,7 +145,7 @@ GET    /fare/suburbs
 
 POST   /fare/calculate
        - Calculate fare for a route
-       - Body: { pickup, destination, pickupTime }
+       - Body: { pickupSuburd, destinationSuburb, pickupTime }
        - Returns: { success, fare, breakdown }
 
 ANALYTICS ENDPOINTS:
@@ -446,16 +440,11 @@ KNOWN LIMITATIONS:
 KNOWN ISSUES:
 -------------
 
-1. Port Conflicts
-   - Backend may fail to start if port 5000 is already in use
-   - Solution: Kill existing process with: lsof -ti:5000 | xargs kill -9
-   - Frontend may use port 5174 if 5173 is occupied
-
-2. Date Picker Browser Compatibility
+1. Date Picker Browser Compatibility
    - Date/time input appearance varies by browser
    - Some browsers may not support min date attribute
 
-3. Large Dataset Performance
+2. Large Dataset Performance
    - Analytics page may be slow with thousands of bookings
    - No pagination on booking lists
    - Revenue chart limited to last 7 days only
@@ -465,22 +454,13 @@ KNOWN ISSUES:
    - Phone number accepts any format (no international validation)
    - Destination field is optional (allows null values)
 
-5. CSS Color Visibility
-   - Status bars in analytics may have contrast issues
-   - Text color changed to black for better visibility
-   - White text removed to improve readability
 
-6. No Data Persistence Warning
-   - SQLite database can be deleted accidentally
-   - No warning before status updates
-   - No undo functionality
-
-7. Concurrent Booking Issues
+5. Concurrent Booking Issues
    - No locking mechanism for booking assignments
    - Multiple admins could assign same booking to different drivers
    - No conflict resolution
 
-8. Browser Refresh Loses State
+6. Browser Refresh Loses State
    - Driver dashboard filters reset on refresh
    - Form data not preserved on navigation
    - No session storage implementation
@@ -513,8 +493,6 @@ AI TOOLS USED:
 --------------
 - GitHub Copilot (Claude Sonnet 4.5 model)
 - AI-assisted code generation and completion
-- AI-powered debugging and problem-solving
-- AI-guided architectural decisions
 
 POSITIVE IMPACTS:
 -----------------
@@ -522,20 +500,16 @@ POSITIVE IMPACTS:
 1. Rapid Prototyping and Development Speed
    - AI generated complete component structures quickly
    - Boilerplate code created in seconds rather than minutes
-   - Full CRUD API endpoints scaffolded rapidly
-   - Reduced development time by approximately 60-70%
+   - Reduced development time by approximately 50%
 
 2. Code Quality and Best Practices
    - AI suggested modern React patterns (functional components, hooks)
    - Consistent code style across all files
    - Proper error handling implemented automatically
-   - Comments and documentation generated alongside code
 
 3. Problem-Solving and Debugging
-   - AI identified MySQL connection timeout issues quickly
    - Suggested migration from MySQL to SQLite for easier deployment
    - Debugged port conflict issues (EADDRINUSE errors)
-   - Provided solutions for validation and user feedback problems
 
 4. Learning and Skill Development
    - Learned SQLite synchronous API through AI explanations
@@ -543,14 +517,8 @@ POSITIVE IMPACTS:
    - Gained insights into Express.js middleware configuration
    - Learned better-sqlite3 library usage and migration techniques
 
-5. Feature Expansion Efficiency
-   - Rapidly implemented 4 new features (Driver Dashboard, Customer Tracker, 
-     Fare Calculator, Analytics) in a single session
-   - Consistent component architecture across all features
-   - Parallel creation of frontend components and backend routes
-   - Complete styling with CSS for all components
 
-6. Database Schema Evolution
+5. Database Schema Evolution
    - AI assisted in adding new columns to existing SQLite database
    - Generated proper ALTER TABLE migration scripts
    - Ensured backward compatibility with existing data
@@ -584,65 +552,6 @@ CHALLENGES AND LIMITATIONS:
    - Required manual file deletion and recreation
    - Highlighted importance of version control and backups
 
-SPECIFIC EXAMPLES OF AI ASSISTANCE:
------------------------------------
-
-Example 1: Database Migration
-   Problem: MySQL connection timeouts to webdev.aut.ac.nz
-   AI Solution: Suggested complete migration to SQLite
-   Steps: Uninstall mysql2 → Install better-sqlite3 → Convert async/await 
-          to synchronous API → Update all route files
-   Result: Successful migration in under 30 minutes
-
-Example 2: Validation Feedback
-   Problem: Book button failed silently when booking past times
-   AI Solution: Added alert() popups and enhanced error message styling
-   Implementation: Added validation in handleSubmit, created shake animation,
-                  improved CSS for error visibility
-   Result: Clear user feedback for all validation errors
-
-Example 3: Feature Expansion
-   Problem: User requested 4 new features for system expansion
-   AI Solution: Created comprehensive plan with backend routes first, 
-               then frontend components
-   Implementation: 5 backend route files + 4 frontend components with CSS
-   Result: All features implemented and tested in single session
-
-Example 4: Analytics Dashboard
-   Problem: Need admin dashboard with metrics and visualizations
-   AI Solution: Created comprehensive analytics with 6 metrics, status bars,
-               rankings, revenue charts, and tables
-   Implementation: Parallel data fetching from 3 endpoints, responsive grid
-                  layouts, color-coded visualizations
-   Result: Fully functional analytics dashboard with refresh capability
-
-DEVELOPMENT WORKFLOW WITH AI:
-------------------------------
-
-1. Planning Phase
-   - Discussed features and requirements with AI
-   - AI suggested technology stack and architecture
-   - Created todo lists to track progress
-   - Broke down complex features into manageable tasks
-
-2. Implementation Phase
-   - AI generated initial code structure
-   - Developer reviewed and refined implementations
-   - Iterative improvements based on testing
-   - AI fixed bugs and issues as they arose
-
-3. Testing Phase
-   - AI suggested test scenarios and edge cases
-   - Developer executed tests manually
-   - AI debugged failures and provided fixes
-   - Comprehensive documentation created
-
-4. Refinement Phase
-   - UI/UX improvements suggested by AI
-   - Color and styling adjustments for visibility
-   - Navigation enhancements across pages
-   - Final polishing and documentation
-
 LESSONS LEARNED:
 ----------------
 
@@ -657,37 +566,14 @@ LESSONS LEARNED:
    - Incremental testing caught issues early
    - Easier to debug when changes were small and focused
 
-3. Documentation Benefits
-   - AI-generated comments and documentation were valuable
-   - Student information headers consistently added to all files
-   - Comprehensive README created efficiently
-   - Code self-documenting through clear naming and structure
 
-4. Architecture Matters
+3. Architecture Matters
    - Starting with solid architecture paid dividends
    - AI followed established patterns consistently
    - Clean separation of concerns (routes, components, styling)
    - Modular structure made expansion easier
 
-5. Version Control Essential
-   - File corruption incident highlighted need for backups
-   - Git commits after each feature completion recommended
-   - Ability to revert changes important safety net
 
-PRODUCTIVITY METRICS:
----------------------
-
-Estimated Time Saved:
-- Backend API (5 routes): Saved ~4 hours (completed in 1 hour vs 5 hours)
-- Frontend Components (6 pages): Saved ~8 hours (completed in 2 hours vs 10 hours)
-- Styling (6 CSS files): Saved ~3 hours (completed in 30 mins vs 3.5 hours)
-- Debugging/Fixes: Saved ~2 hours (quick AI diagnosis vs manual debugging)
-- Documentation: Saved ~1 hour (AI-generated comprehensive README)
-
-Total Estimated Time Saved: ~18 hours
-Actual Development Time: ~5 hours
-Without AI Estimate: ~23 hours
-Efficiency Gain: ~78%
 
 RECOMMENDATIONS FOR FUTURE AI-ASSISTED DEVELOPMENT:
 ---------------------------------------------------
@@ -729,7 +615,7 @@ RECOMMENDATIONS FOR FUTURE AI-ASSISTED DEVELOPMENT:
 
 CONCLUSION:
 -----------
-AI-assisted development with GitHub Copilot significantly accelerated the development of this taxi booking system. The productivity gains were substantial (~78% time savings), while maintaining good code quality and learning opportunities. The AI acted as an effective pair programmer, handling repetitive tasks, suggesting solutions, and maintaining consistency across the codebase.
+AI-assisted development with GitHub Copilot significantly accelerated the development of this taxi booking system. The productivity gains were substantial (~50% time savings), while maintaining good code quality and learning opportunities. The AI acted as an effective pair programmer, handling repetitive tasks, suggesting solutions, and maintaining consistency across the codebase.
 
 However, human expertise remained essential for:
 - Architectural decisions and design patterns
