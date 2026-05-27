@@ -16,7 +16,6 @@ const Analytics = () => {
   const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [routes, setRoutes] = useState(null);
-  const [revenue, setRevenue] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -29,19 +28,16 @@ const Analytics = () => {
     setError('');
 
     try {
-      const [statsRes, routesRes, revenueRes] = await Promise.all([
+      const [statsRes, routesRes] = await Promise.all([
         fetch(`${config.API_URL}/api/analytics/stats`),
-        fetch(`${config.API_URL}/api/analytics/popular-routes`),
-        fetch(`${config.API_URL}/api/analytics/revenue`)
+        fetch(`${config.API_URL}/api/analytics/popular-routes`)
       ]);
 
       const statsData = await statsRes.json();
       const routesData = await routesRes.json();
-      const revenueData = await revenueRes.json();
 
       if (statsData.success) setStats(statsData.stats);
       if (routesData.success) setRoutes(routesData.routes);
-      if (revenueData.success) setRevenue(revenueData.revenue);
 
     } catch (err) {
       setError('Failed to fetch analytics. Please check if backend is running.');
@@ -85,34 +81,16 @@ const Analytics = () => {
       {/* Key Metrics */}
       {stats && (
         <div className="metrics-grid">
-          <div className="metric-card blue">
-            <div className="metric-icon">📦</div>
-            <div className="metric-value">{stats.totalBookings}</div>
-            <div className="metric-label">Total Bookings</div>
-          </div>
-
-          <div className="metric-card green">
-            <div className="metric-icon">✅</div>
-            <div className="metric-value">{stats.completedBookings}</div>
-            <div className="metric-label">Completed</div>
-          </div>
-
           <div className="metric-card purple">
             <div className="metric-icon">📅</div>
             <div className="metric-value">{stats.todayBookings}</div>
             <div className="metric-label">Today's Bookings</div>
           </div>
 
-          <div className="metric-card orange">
-            <div className="metric-icon">💰</div>
-            <div className="metric-value">${stats.totalRevenue.toFixed(2)}</div>
-            <div className="metric-label">Total Revenue</div>
-          </div>
-
-          <div className="metric-card teal">
-            <div className="metric-icon">💵</div>
-            <div className="metric-value">${stats.avgFare.toFixed(2)}</div>
-            <div className="metric-label">Avg Fare</div>
+          <div className="metric-card green">
+            <div className="metric-icon">✅</div>
+            <div className="metric-value">{stats.completedBookings}</div>
+            <div className="metric-label">Completed Today</div>
           </div>
 
           <div className="metric-card pink">
@@ -129,7 +107,7 @@ const Analytics = () => {
           <h2>Bookings by Status</h2>
           <div className="status-grid">
             <div className="status-item">
-              <div className="status-bar" style={{ width: `${(stats.byStatus.unassigned / stats.totalBookings) * 100}%`, backgroundColor: '#FF9800' }}></div>
+              <div className="status-bar" style={{ width: `${stats.todayBookings > 0 ? (stats.byStatus.unassigned / stats.todayBookings) * 100 : 0}%`, backgroundColor: '#FF9800' }}></div>
               <div className="status-info">
                 <span className="status-name">Unassigned</span>
                 <span className="status-count">{stats.byStatus.unassigned}</span>
@@ -137,7 +115,7 @@ const Analytics = () => {
             </div>
 
             <div className="status-item">
-              <div className="status-bar" style={{ width: `${(stats.byStatus.assigned / stats.totalBookings) * 100}%`, backgroundColor: '#2196F3' }}></div>
+              <div className="status-bar" style={{ width: `${stats.todayBookings > 0 ? (stats.byStatus.assigned / stats.todayBookings) * 100 : 0}%`, backgroundColor: '#2196F3' }}></div>
               <div className="status-info">
                 <span className="status-name">Assigned</span>
                 <span className="status-count">{stats.byStatus.assigned}</span>
@@ -145,7 +123,7 @@ const Analytics = () => {
             </div>
 
             <div className="status-item">
-              <div className="status-bar" style={{ width: `${(stats.byStatus['picked-up'] / stats.totalBookings) * 100}%`, backgroundColor: '#9C27B0' }}></div>
+              <div className="status-bar" style={{ width: `${stats.todayBookings > 0 ? (stats.byStatus['picked-up'] / stats.todayBookings) * 100 : 0}%`, backgroundColor: '#9C27B0' }}></div>
               <div className="status-info">
                 <span className="status-name">Picked Up</span>
                 <span className="status-count">{stats.byStatus['picked-up']}</span>
@@ -153,7 +131,7 @@ const Analytics = () => {
             </div>
 
             <div className="status-item">
-              <div className="status-bar" style={{ width: `${(stats.byStatus['en-route'] / stats.totalBookings) * 100}%`, backgroundColor: '#FF5722' }}></div>
+              <div className="status-bar" style={{ width: `${stats.todayBookings > 0 ? (stats.byStatus['en-route'] / stats.todayBookings) * 100 : 0}%`, backgroundColor: '#FF5722' }}></div>
               <div className="status-info">
                 <span className="status-name">En Route</span>
                 <span className="status-count">{stats.byStatus['en-route']}</span>
@@ -161,7 +139,7 @@ const Analytics = () => {
             </div>
 
             <div className="status-item">
-              <div className="status-bar" style={{ width: `${(stats.byStatus.completed / stats.totalBookings) * 100}%`, backgroundColor: '#4CAF50' }}></div>
+              <div className="status-bar" style={{ width: `${stats.todayBookings > 0 ? (stats.byStatus.completed / stats.todayBookings) * 100 : 0}%`, backgroundColor: '#4CAF50' }}></div>
               <div className="status-info">
                 <span className="status-name">Completed</span>
                 <span className="status-count">{stats.byStatus.completed}</span>
@@ -198,63 +176,6 @@ const Analytics = () => {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* Revenue Chart */}
-      {revenue && revenue.daily.length > 0 && (
-        <div className="dashboard-section">
-          <h2>💰 Daily Revenue (Last 7 Days)</h2>
-          <div className="revenue-chart">
-            {revenue.daily.map((day) => {
-              const maxRevenue = Math.max(...revenue.daily.map(d => d.revenue));
-              const height = maxRevenue > 0 ? (day.revenue / maxRevenue) * 100 : 0;
-              
-              return (
-                <div key={day.date} className="chart-bar">
-                  <div className="bar-container">
-                    <div 
-                      className="bar" 
-                      style={{ height: `${height}%` }}
-                      title={`$${day.revenue.toFixed(2)}`}
-                    ></div>
-                  </div>
-                  <div className="bar-label">
-                    <div className="bar-date">{new Date(day.date).toLocaleDateString('en-NZ', { month: 'short', day: 'numeric' })}</div>
-                    <div className="bar-value">${day.revenue.toFixed(2)}</div>
-                    <div className="bar-bookings">{day.bookings} rides</div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Revenue by Status */}
-      {revenue && revenue.byStatus.length > 0 && (
-        <div className="dashboard-section">
-          <h2>📊 Revenue by Status</h2>
-          <div className="revenue-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Status</th>
-                  <th>Bookings</th>
-                  <th>Revenue</th>
-                </tr>
-              </thead>
-              <tbody>
-                {revenue.byStatus.map((item) => (
-                  <tr key={item.status}>
-                    <td className="status-cell">{item.status}</td>
-                    <td>{item.bookings}</td>
-                    <td className="revenue-cell">${item.revenue.toFixed(2)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
         </div>
       )}
